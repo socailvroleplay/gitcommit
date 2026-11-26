@@ -101,7 +101,7 @@
       ? '<div class="list">' + e.commits.map((c) =>
           `<div><a href="${safeUrl(c.url)}" target="_blank" rel="noopener"><code>${esc(c.sha)}</code></a> ${esc(c.message)}</div>`
         ).join("") + "</div>"
-      : `<div class="msg">${esc(e.message)}</div>`;
+      : (e.message && e.message !== e.title ? `<div class="msg">${esc(e.message)}</div>` : "");
     const status = isMerge ? `Merged · ${esc(e.source)} → ${esc(e.branch)}` : "Pushed";
     const when = new Date(e.time).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
 
@@ -117,8 +117,7 @@
           <div><div class="label">Branch</div><code>${esc(e.branch)}</code></div>
           <div><div class="label">Commit</div><a href="${safeUrl(e.url)}" target="_blank" rel="noopener"><code>${esc(e.sha)}</code></a></div>
         </div>
-        <div class="label">Message</div>
-        ${message}
+        ${message ? `<div class="label">Message</div>${message}` : ""}
         <div class="foot" title="${esc(when)}">${status} · ${timeAgo(e.time)}</div>
       </article>`;
   }
