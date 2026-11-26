@@ -74,7 +74,10 @@ function toEntry(p) {
   }
 
   e.title = (e.title || `Update on ${e.branch}`).slice(0, 250);
-  if (e.type !== "multi") e.message = (e.message || firstLine || "No message").slice(0, 1000);
+  if (e.type !== "multi") {
+    e.message = (e.message || "").trim().slice(0, 1000);
+    if (e.message === e.title) e.message = ""; // title jaisa hi ho to Message box mat dikhao
+  }
   return e;
 }
 
@@ -98,7 +101,7 @@ function toDiscord(e) {
           { name: "Repo", value: `\`${e.repo}\``, inline: true },
           { name: "Branch", value: `\`${e.branch}\``, inline: true },
           { name: "Commit", value: e.url ? `[\`${e.sha}\`](${e.url})` : `\`${e.sha}\``, inline: true },
-          { name: "Message", value: message || "No message", inline: false },
+          ...(message ? [{ name: "Message", value: message, inline: false }] : []),
         ],
         footer: { text: `${status}  •  ${CREDIT}` },
         timestamp: e.time,
